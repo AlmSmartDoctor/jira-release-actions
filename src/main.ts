@@ -50,26 +50,26 @@ async function run(): Promise<void> {
     let version = project.getVersion(RELEASE_NAME)
 
     if (version === undefined) {
-      core.debug(`Version ${RELEASE_NAME} not found`)
+      core.info(`Version ${RELEASE_NAME} not found`)
       if (CREATE === 'true') {
         core.debug(`Version ${RELEASE_NAME} is going to the created`)
         const versionToCreate: Version = {
           name: RELEASE_NAME,
           archived: false,
           released: true,
-          releaseDate: new Date().toISOString(),
+          releaseDate: '2024-06-20T15:45:30.123Z',
           projectId: Number(project.project?.id)
         }
         version = await project.createVersion(versionToCreate)
         core.debug(versionToCreate.name)
       }
     } else {
-      core.debug(`Version ${RELEASE_NAME} found and is going to be updated`)
+      core.info(`Version ${RELEASE_NAME} found and is going to be updated`)
       const versionToUpdate: Version = {
         ...version,
         self: undefined,
-        released: true,
-        releaseDate: new Date().toISOString(),
+        released: false,
+        releaseDate: '2024-06-10T15:45:30.123Z',
         userReleaseDate: undefined
       }
       version = await project.updateVersion(versionToUpdate)
