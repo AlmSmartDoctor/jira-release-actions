@@ -56,7 +56,7 @@ async function run(): Promise<void> {
         const versionToCreate: Version = {
           name: RELEASE_NAME,
           archived: false,
-          released: true,
+          released: false,
           releaseDate: new Date().toISOString(),
           projectId: Number(project.project?.id)
         }
