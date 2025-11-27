@@ -1,5 +1,5 @@
 import * as core from '@actions/core'
-import axios, {AxiosError} from 'axios'
+import axios from 'axios'
 import {Version, ProjectDTO} from './models'
 
 export class Project {
@@ -28,7 +28,7 @@ export class Project {
     }
   }
 
-  async createVersion(version: Version): Promise<Version> {
+  async createVersion(version: Version): Promise<Version | undefined> {
     try {
       const response = await axios.post(
         `https://${this.domain}.atlassian.net/rest/api/3/version`,
@@ -37,11 +37,11 @@ export class Project {
       )
       return response?.data
     } catch (error: unknown) {
-      return Promise.reject(toMoreDescriptiveError(error))
+      return undefined
     }
   }
 
-  async updateVersion(version: Version): Promise<Version> {
+  async updateVersion(version: Version): Promise<Version | undefined> {
     try {
       core.debug(JSON.stringify(version))
       const response = await axios.put(
@@ -51,7 +51,7 @@ export class Project {
       )
       return response?.data
     } catch (error: unknown) {
-      return Promise.reject(toMoreDescriptiveError(error))
+      return undefined
     }
   }
 
@@ -94,10 +94,10 @@ export class Project {
         this._authHeaders()
       )
       this.project = response?.data
-      return this
     } catch (error: unknown) {
-      return Promise.reject(toMoreDescriptiveError(error))
+      // ignore
     }
+    return this
   }
 
   _authHeaders(): Object {
@@ -112,21 +112,3 @@ export class Project {
   }
 }
 
-const toMoreDescriptiveError = (error: unknown): Error | unknown => {
-  if (
-    isAxiosError(error) &&
-    error.response?.status === 404 &&
-    Array.isArray(error.response.data?.errorMessages)
-  ) {
-    return new Error(
-      `${error.response.data?.errorMessages[0]} (this may be due to a missing/invalid API key)`
-    )
-  } else {
-    core.debug(`error: ${error}`)
-    return error
-  }
-}
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const isAxiosError = (error: any): error is AxiosError =>
-  error?.isAxiosError ?? false
