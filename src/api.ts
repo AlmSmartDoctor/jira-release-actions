@@ -73,7 +73,6 @@ export class Project {
       )
       return response?.data
     } catch (error: unknown) {
-      console.error(toMoreDescriptiveError(error))
       return
     }
   }
