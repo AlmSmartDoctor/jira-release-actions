@@ -70,7 +70,7 @@ class Project {
                 return response === null || response === void 0 ? void 0 : response.data;
             }
             catch (error) {
-                return Promise.reject(toMoreDescriptiveError(error));
+                return undefined;
             }
         });
     }
@@ -82,7 +82,7 @@ class Project {
                 return response === null || response === void 0 ? void 0 : response.data;
             }
             catch (error) {
-                return Promise.reject(toMoreDescriptiveError(error));
+                return undefined;
             }
         });
     }
@@ -102,7 +102,7 @@ class Project {
                 return response === null || response === void 0 ? void 0 : response.data;
             }
             catch (error) {
-                return Promise.reject(toMoreDescriptiveError(error));
+                return;
             }
         });
     }
@@ -117,11 +117,11 @@ class Project {
             try {
                 const response = yield axios_1.default.get(`https://${this.domain}.atlassian.net/rest/api/3/project/${this.name}?properties=versions,key,id,name`, this._authHeaders());
                 this.project = response === null || response === void 0 ? void 0 : response.data;
-                return this;
             }
             catch (error) {
-                return Promise.reject(toMoreDescriptiveError(error));
+                // ignore
             }
+            return this;
         });
     }
     _authHeaders() {
@@ -134,20 +134,6 @@ class Project {
     }
 }
 exports.Project = Project;
-const toMoreDescriptiveError = (error) => {
-    var _a, _b, _c;
-    if (isAxiosError(error) &&
-        ((_a = error.response) === null || _a === void 0 ? void 0 : _a.status) === 404 &&
-        Array.isArray((_b = error.response.data) === null || _b === void 0 ? void 0 : _b.errorMessages)) {
-        return new Error(`${(_c = error.response.data) === null || _c === void 0 ? void 0 : _c.errorMessages[0]} (this may be due to a missing/invalid API key)`);
-    }
-    else {
-        core.debug(`error: ${error}`);
-        return error;
-    }
-};
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const isAxiosError = (error) => { var _a; return (_a = error === null || error === void 0 ? void 0 : error.isAxiosError) !== null && _a !== void 0 ? _a : false; };
 
 
 /***/ }),
@@ -273,7 +259,7 @@ function run() {
                     const versionToCreate = {
                         name: env_1.RELEASE_NAME,
                         archived: false,
-                        released: true,
+                        released: false,
                         releaseDate: new Date().toISOString(),
                         projectId: Number((_c = project.project) === null || _c === void 0 ? void 0 : _c.id)
                     };
