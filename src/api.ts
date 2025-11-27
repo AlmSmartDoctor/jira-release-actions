@@ -73,7 +73,8 @@ export class Project {
       )
       return response?.data
     } catch (error: unknown) {
-      return Promise.reject(toMoreDescriptiveError(error))
+      console.error(toMoreDescriptiveError(error))
+      return
     }
   }
 
