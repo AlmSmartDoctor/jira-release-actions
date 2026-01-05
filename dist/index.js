@@ -267,11 +267,6 @@ function run() {
                     core.debug(versionToCreate.name);
                 }
             }
-            else {
-                core.debug(`Version ${env_1.RELEASE_NAME} found and is going to be updated`);
-                const versionToUpdate = Object.assign(Object.assign({}, version), { self: undefined, released: true, releaseDate: new Date().toISOString(), userReleaseDate: undefined });
-                version = yield project.updateVersion(versionToUpdate);
-            }
             if (env_1.TICKETS !== '') {
                 const tickets = env_1.TICKETS.split(',');
                 // eslint-disable-next-line github/array-foreach

@@ -63,16 +63,6 @@ async function run(): Promise<void> {
         version = await project.createVersion(versionToCreate)
         core.debug(versionToCreate.name)
       }
-    } else {
-      core.debug(`Version ${RELEASE_NAME} found and is going to be updated`)
-      const versionToUpdate: Version = {
-        ...version,
-        self: undefined,
-        released: true,
-        releaseDate: new Date().toISOString(),
-        userReleaseDate: undefined
-      }
-      version = await project.updateVersion(versionToUpdate)
     }
 
     if (TICKETS !== '') {
